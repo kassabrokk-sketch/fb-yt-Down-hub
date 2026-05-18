@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Video Download Hub</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:500px;
+    background:#111827;
+    border-radius:25px;
+    padding:30px 20px;
+    box-shadow:0 0 30px rgba(0,0,0,0.4);
+}
+
+.logo{
+    text-align:center;
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.sub{
+    text-align:center;
+    color:#9ca3af;
+    font-size:14px;
+    margin-bottom:30px;
+}
+
+.input-box{
+    width:100%;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:15px;
+    background:#1f2937;
+    color:white;
+    font-size:15px;
+    outline:none;
+}
+
+button{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:15px;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.02);
+}
+
+.loader{
+    display:none;
+    margin:25px auto;
+    border:5px solid #1f2937;
+    border-top:5px solid #3b82f6;
+    border-radius:50%;
+    width:50px;
+    height:50px;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+.result{
+    display:none;
+    margin-top:25px;
+    text-align:center;
+}
+
+.video-card{
+    background:#1f2937;
+    border-radius:20px;
+    padding:20px;
+}
+
+.video-card img{
+    width:100%;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+.video-title{
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.quality{
+    display:inline-block;
+    padding:6px 14px;
+    background:#16a34a;
+    border-radius:30px;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.countdown{
+    font-size:20px;
+    font-weight:700;
+    margin:15px 0;
+    color:#60a5fa;
+}
+
+.download-btn{
+    display:block;
+    text-decoration:none;
+    width:100%;
+    padding:15px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#10b981,#059669);
+    color:white;
+    font-weight:600;
+    margin-top:10px;
+}
+
+.ad-box{
+    margin-top:20px;
+    background:#0f172a;
+    border:2px dashed #334155;
+    padding:20px;
+    border-radius:15px;
+    color:#94a3b8;
+    font-size:14px;
+}
+
+@media(max-width:600px){
+
+    .container{
+        padding:25px 15px;
+        border-radius:20px;
+    }
+
+    .logo{
+        font-size:24px;
+    }
+
+    input{
+        padding:14px;
+        font-size:14px;
+    }
+
+    button{
+        padding:14px;
+        font-size:15px;
+    }
+
+    .download-btn{
+        padding:14px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="logo">Video Download Hub</div>
+
+    <div class="sub">
+        Paste your video link and generate a download page
+    </div>
+
+    <div class="input-box">
+        <input type="text" id="videoLink" placeholder="Paste Video URL Here">
+    </div>
+
+    <button onclick="generateLink()">
+        Create Download Link
+    </button>
+
+    <div class="loader" id="loader"></div>
+
+    <div class="result" id="result">
+
+        <div class="video-card">
+
+            <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1200&auto=format&fit=crop" alt="thumbnail">
+
+            <div class="video-title">
+                Your Video Is Ready
+            </div>
+
+            <div class="quality">
+                HD Quality
+            </div>
+
+            <div class="countdown" id="countdown">
+                30
+            </div>
+
+            <a class="download-btn" href="#" id="downloadBtn">
+                Download Now
+            </a>
+
+            <div class="ad-box">
+                Google Ad Placeholder
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function generateLink(){
+
+    let url = document.getElementById("videoLink").value;
+
+    if(url === ""){
+        alert("Please paste a video URL");
+        return;
+    }
+
+    document.getElementById("loader").style.display = "block";
+
+    setTimeout(() => {
+
+        document.getElementById("loader").style.display = "none";
+
+        document.getElementById("result").style.display = "block";
+
+        startCountdown();
+
+    }, 2500);
+
+}
+
+function startCountdown(){
+
+    let time = 30;
+
+    let countdown = document.getElementById("countdown");
+
+    let timer = setInterval(() => {
+
+        time--;
+
+        countdown.innerHTML = time;
+
+        if(time <= 0){
+
+            clearInterval(timer);
+
+            countdown.innerHTML = "Download Ready";
+
+        }
+
+    },1000);
+
+}
+
+document.getElementById("downloadBtn").addEventListener("click",function(e){
+
+    e.preventDefault();
+
+    alert("Demo Download Button");
+
+});
+
+</script>
+
+</body>
+</html>
